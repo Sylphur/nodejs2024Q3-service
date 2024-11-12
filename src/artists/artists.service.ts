@@ -1,12 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Artists } from 'src/DB/database';
+import { Albums, Artists, Tracks } from 'src/DB/database';
 import { PostArtistValidator } from './validators/postArtist.validator';
 import { Artist } from 'src/shared/interfaces/dto.interface';
 import { v4 } from 'uuid';
 import { PutArtistValidator } from './validators/putArtist.validator';
+import { TracksService } from 'src/tracks/tracks.service';
+import { AlbumsService } from 'src/albums/albums.service';
 
 @Injectable()
 export class ArtistsService {
+  constructor(
+    private readonly tracksService: TracksService,
+    private readonly albumsService: AlbumsService,
+  ) {}
+
   getAllArtists() {
     return Artists;
   }
@@ -47,5 +54,24 @@ export class ArtistsService {
     if (!takenArtist) throw new NotFoundException('Artist is not found');
     const index = Artists.indexOf(takenArtist);
     Artists.splice(index, 1);
+
+    const tracksToEdit = Tracks.filter((track) => track.artistId === id);
+    tracksToEdit.forEach((track) => {
+      this.tracksService.editTrack(track.id, {
+        name: track.name,
+        duration: track.duration,
+        albumId: track.albumId,
+        artistId: null,
+      });
+    });
+
+    const albumsToEdit = Albums.filter((album) => album.artistId === id);
+    albumsToEdit.forEach((album) => {
+      this.albumsService.editAlbum(album.id, {
+        name: album.name,
+        year: album.year,
+        artistId: null,
+      });
+    });
   }
 }

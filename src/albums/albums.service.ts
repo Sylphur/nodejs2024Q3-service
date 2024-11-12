@@ -1,12 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Albums } from 'src/DB/database';
+import { Albums, Tracks } from 'src/DB/database';
 import { PostAlbumValidator } from './validators/postAlbum.validator';
 import { Album } from 'src/shared/interfaces/dto.interface';
 import { v4, validate } from 'uuid';
 import { PutAlbumValidator } from './validators/putAlbum.validator';
+import { TracksService } from 'src/tracks/tracks.service';
 
 @Injectable()
 export class AlbumsService {
+  constructor(private readonly tracksService: TracksService) {}
+
   getAllAlbums() {
     return Albums;
   }
@@ -35,7 +38,10 @@ export class AlbumsService {
       id: takenAlbum.id,
       name: dto.name ? dto.name : takenAlbum.name,
       year: dto.year ? dto.year : takenAlbum.year,
-      artistId: validate(dto.artistId) ? dto.artistId : takenAlbum.artistId,
+      artistId:
+        validate(dto.artistId) || dto.artistId === null
+          ? dto.artistId
+          : takenAlbum.artistId,
     };
     const index = Albums.indexOf(takenAlbum);
     Albums.splice(index, 1);
@@ -48,5 +54,15 @@ export class AlbumsService {
     if (!takenAlbum) throw new NotFoundException('Artist is not found');
     const index = Albums.indexOf(takenAlbum);
     Albums.splice(index, 1);
+
+    const tracksToEdit = Tracks.filter((track) => track.albumId === id);
+    tracksToEdit.forEach((track) => {
+      this.tracksService.editTrack(track.id, {
+        name: track.name,
+        duration: track.duration,
+        albumId: null,
+        artistId: track.artistId,
+      });
+    });
   }
 }

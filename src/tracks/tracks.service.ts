@@ -34,8 +34,14 @@ export class TracksService {
     const updatedTrack: Track = {
       id: takenTrack.id,
       name: dto.name ? dto.name : takenTrack.name,
-      artistId: validate(dto.artistId) ? dto.artistId : takenTrack.artistId,
-      albumId: validate(dto.albumId) ? dto.albumId : takenTrack.albumId,
+      artistId:
+        validate(dto.artistId) || dto.artistId === null
+          ? dto.artistId
+          : takenTrack.artistId,
+      albumId:
+        validate(dto.albumId) || dto.albumId === null
+          ? dto.albumId
+          : takenTrack.albumId,
       duration: dto.duration ? dto.duration : takenTrack.duration,
     };
     const index = Tracks.indexOf(takenTrack);
