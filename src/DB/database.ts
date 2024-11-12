@@ -45,10 +45,8 @@ export const Tracks: Track[] = [
   },
 ];
 
-export const Favorites: Favorite[] = [
-  {
-    artists: [Artists[0].id],
-    albums: [],
-    tracks: [Tracks[0].id],
-  },
-];
+export const Favorites: Favorite = {
+  artists: [Artists[0].id],
+  albums: [],
+  tracks: [Tracks[0].id],
+};
