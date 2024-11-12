@@ -69,4 +69,10 @@ export class UserService {
     Users.push(updatedUser);
     return this.getUserWithoutPwd(updatedUser);
   }
+  deleteUser(id: string) {
+    const takenUser = Users.find((user) => user.id === id);
+    if (!takenUser) throw new NotFoundException('User is not found');
+    const index = Users.indexOf(takenUser);
+    Users.splice(index, 1);
+  }
 }
