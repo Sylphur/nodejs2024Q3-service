@@ -25,7 +25,12 @@ export interface FilteredUser {
   updatedAt: number; // timestamp of last update
 }
 
-export interface Artist {
+export interface CreateArtistDto {
+  name: string;
+  grammy: boolean;
+}
+
+export interface Artist extends CreateArtistDto {
   id: string; // uuid v4
   name: string;
   grammy: boolean;
