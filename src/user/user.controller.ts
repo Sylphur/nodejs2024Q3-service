@@ -1,13 +1,20 @@
 import {
+  Body,
   ClassSerializerInterceptor,
   Controller,
   Get,
   NotFoundException,
   Param,
   ParseUUIDPipe,
+  Post,
+  Put,
   UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
+import { PostUserValidator } from './validators/postUser.validator';
+import { PutUserValidator } from './validators/putUser.validator';
 
 @Controller('user')
 export class UserController {
@@ -29,5 +36,22 @@ export class UserController {
     const takenUser = this.userService.getUser(id);
     if (!takenUser) throw new NotFoundException('User is not found');
     return this.userService.getUserWithoutPwd(takenUser);
+  }
+
+  @UsePipes(new ValidationPipe())
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Post()
+  postNewUser(@Body() dto: PostUserValidator) {
+    return this.userService.postUser(dto);
+  }
+
+  @UsePipes(new ValidationPipe())
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Put('/:id')
+  putUser(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: PutUserValidator,
+  ) {
+    return this.userService.updateUser(id, dto);
   }
 }

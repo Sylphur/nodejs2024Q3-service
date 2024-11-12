@@ -13,7 +13,7 @@ export const Users: User[] = [
     login: 'Sylphur',
     password: '12345',
     version: 1,
-    createdAt: Date.now() - Math.floor(Math.random()) * 10000,
+    createdAt: Date.now() - Math.floor(Math.random() * 10000),
     updatedAt: Date.now(),
   },
 ];
