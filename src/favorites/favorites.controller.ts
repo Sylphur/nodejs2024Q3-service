@@ -23,9 +23,31 @@ export class FavoritesController {
     return this.favsService.postNewFavoriteTrack(id);
   }
 
+  @Post('/album/:id')
+  postFavAlbum(@Param('id', ParseUUIDPipe) id: string) {
+    return this.favsService.postNewFavoriteAlbum(id);
+  }
+
+  // @Post('/artist/:id')
+  // postFavArtist(@Param('id', ParseUUIDPipe) id: string) {
+  //   return this.favsService.postNewFavoriteArtist(id);
+  // }
+
   @Delete('/track/:id')
   @HttpCode(204)
   deleteFavTrack(@Param('id', ParseUUIDPipe) id: string) {
     this.favsService.deleteFavoriteTrack(id);
   }
+
+  @Delete('/album/:id')
+  @HttpCode(204)
+  deleteFavAlbum(@Param('id', ParseUUIDPipe) id: string) {
+    this.favsService.deleteFavoriteAlbum(id);
+  }
+
+  // @Delete('/artist/:id')
+  // @HttpCode(204)
+  // deleteFavArtist(@Param('id', ParseUUIDPipe) id: string) {
+  //   this.favsService.deleteFavoriteArtist(id);
+  // }
 }

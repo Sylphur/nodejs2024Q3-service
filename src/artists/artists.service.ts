@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Albums, Artists, Tracks } from 'src/DB/database';
+import { Albums, Artists, Favorites, Tracks } from 'src/DB/database';
 import { PostArtistValidator } from './validators/postArtist.validator';
 import { Artist } from 'src/shared/interfaces/dto.interface';
 import { v4 } from 'uuid';
@@ -73,5 +73,8 @@ export class ArtistsService {
         artistId: null,
       });
     });
+
+    const favsIndex = Favorites.artists.indexOf(id);
+    if (favsIndex) Favorites.artists.splice(favsIndex, 1);
   }
 }
