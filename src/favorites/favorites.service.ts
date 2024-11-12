@@ -1,7 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { AlbumsService } from 'src/albums/albums.service';
 import { ArtistsService } from 'src/artists/artists.service';
-import { Favorites } from 'src/DB/database';
+import { Favorites, Tracks } from 'src/DB/database';
 import { FavoritesResponse } from 'src/shared/interfaces/dto.interface';
 import { TracksService } from 'src/tracks/tracks.service';
 
@@ -25,5 +29,23 @@ export class FavoritesService {
       }),
     };
     return favoritesResponse;
+  }
+
+  postNewFavoriteTrack(id: string) {
+    const takenTrack = Tracks.find((track) => track.id === id);
+    if (!takenTrack)
+      throw new UnprocessableEntityException('Track with this ID is not found');
+    Favorites.tracks.push(id);
+    return takenTrack;
+  }
+
+  deleteFavoriteTrack(id: string) {
+    const takenTrackEntity = Favorites.tracks.find((entity) => entity === id);
+    if (!takenTrackEntity)
+      throw new NotFoundException(
+        'Track with this ID is not found in favorites',
+      );
+    const index = Favorites.tracks.indexOf(takenTrackEntity);
+    Favorites.tracks.splice(index, 1);
   }
 }
