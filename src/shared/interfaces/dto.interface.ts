@@ -51,7 +51,12 @@ export interface Track extends CreateTrackDto {
   duration: number; // integer number
 }
 
-export interface Album {
+export interface CreateAlbumDto {
+  name: string;
+  year: number;
+  artistId: string | null; // refers to Artist
+}
+export interface Album extends CreateAlbumDto {
   id: string; // uuid v4
   name: string;
   year: number;
