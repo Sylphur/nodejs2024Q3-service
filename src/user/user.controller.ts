@@ -3,7 +3,6 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
-  NotFoundException,
   Param,
   ParseUUIDPipe,
   Post,
@@ -23,19 +22,13 @@ export class UserController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   getUsers() {
-    const takenUsers = this.userService.getAllUsers();
-    const filteredUsers = takenUsers.map((user) => {
-      return this.userService.getUserWithoutPwd(user);
-    });
-    return filteredUsers;
+    return this.userService.getAllUsers();
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('/:id')
   getUser(@Param('id', ParseUUIDPipe) id: string) {
-    const takenUser = this.userService.getUser(id);
-    if (!takenUser) throw new NotFoundException('User is not found');
-    return this.userService.getUserWithoutPwd(takenUser);
+    return this.userService.getUser(id);
   }
 
   @UsePipes(new ValidationPipe())

@@ -14,12 +14,6 @@ import { v4 } from 'uuid';
 
 @Injectable()
 export class UserService {
-  getAllUsers() {
-    return Users;
-  }
-  getUser(id: string) {
-    return Users.find((user) => user.id === id);
-  }
   getUserWithoutPwd(user: User) {
     return new UserEntity({
       id: user.id,
@@ -30,6 +24,20 @@ export class UserService {
       password: user.password,
     });
   }
+
+  getAllUsers() {
+    const filteredUsers = Users.map((user) => {
+      return this.getUserWithoutPwd(user);
+    });
+    return filteredUsers;
+  }
+
+  getUser(id: string) {
+    const takenUser = Users.find((user) => user.id === id);
+    if (!takenUser) throw new NotFoundException('User is not found');
+    return this.getUserWithoutPwd(takenUser);
+  }
+
   postUser(user: CreateUserDto) {
     const newUser: User = {
       id: v4(),
