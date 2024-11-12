@@ -18,20 +18,21 @@ export class FavoritesService {
   ) {}
   getAllFavorites() {
     const takenTracks = Favorites.tracks.map((trackID) => {
-      return this.tracksService.getTrackById(trackID);
+      return Tracks.find((track) => track.id === trackID);
     });
     const takenAlbums = Favorites.albums.map((albumID) => {
-      return this.albumsService.getAlbumById(albumID);
+      return Albums.find((album) => album.id === albumID);
     });
     const takenArtists = Favorites.artists.map((artistID) => {
-      return this.artistsService.getArtistById(artistID);
+      return Artists.find((artist) => artist.id === artistID);
     });
     const favoritesResponse: FavoritesResponse = {
-      artists: takenArtists ? takenArtists : [],
-      albums: takenAlbums ? takenAlbums : [],
-      tracks: takenTracks ? takenTracks : [],
+      artists: takenArtists.length ? takenArtists : [],
+      albums: takenAlbums.length ? takenAlbums : [],
+      tracks: takenTracks.length ? takenTracks : [],
     };
     return favoritesResponse;
+    return Favorites;
   }
 
   postNewFavoriteTrack(id: string) {

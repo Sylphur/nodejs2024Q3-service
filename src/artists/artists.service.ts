@@ -75,6 +75,6 @@ export class ArtistsService {
     });
 
     const favsIndex = Favorites.artists.indexOf(id);
-    if (favsIndex) Favorites.artists.splice(favsIndex, 1);
+    if (favsIndex >= 0) Favorites.artists.splice(favsIndex, 1);
   }
 }

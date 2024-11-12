@@ -66,6 +66,6 @@ export class AlbumsService {
     });
 
     const favsIndex = Favorites.albums.indexOf(id);
-    if (favsIndex) Favorites.albums.splice(favsIndex, 1);
+    if (favsIndex >= 0) Favorites.albums.splice(favsIndex, 1);
   }
 }
