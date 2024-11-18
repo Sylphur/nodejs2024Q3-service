@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Tracks } from 'src/DB/database';
+import { Favorites, Tracks } from 'src/DB/database';
 import { PostTrackValidator } from './validators/postTrack.validator';
 import { Track } from 'src/shared/interfaces/dto.interface';
 import { v4, validate } from 'uuid';
@@ -55,5 +55,8 @@ export class TracksService {
     if (!takenTrack) throw new NotFoundException('Track is not found');
     const index = Tracks.indexOf(takenTrack);
     Tracks.splice(index, 1);
+
+    const favsIndex = Favorites.tracks.indexOf(id);
+    if (favsIndex >= 0) Favorites.tracks.splice(favsIndex, 1);
   }
 }
